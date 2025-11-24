@@ -99,3 +99,18 @@ jobs:
 
       - name: Run linting
         run: npm run lint
+
+  build:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          # Enable BuildKit for parallel and more efficient builds
+          DOCKER_BUILDKIT=1 docker build -t myapp-backend:latest .
